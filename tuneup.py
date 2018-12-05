@@ -6,11 +6,22 @@ __author__ = "???"
 
 import cProfile
 import pstats
+import timeit
 
 
 def profile(func):
     """A function that can be used as a decorator to measure performance"""
-    raise NotImplementedError("Complete this decorator function")
+
+    def inner_func(*args, **kwargs):
+        c = cProfile.Profile()
+        c.enable()
+        result = func(*args, **kwargs)
+        c.disable()
+        sortby = 'cumulative'
+        cs = pstats.Stats(c).sort_stats(sortby)
+        cs.print_stats()
+        return result
+    return inner_func
 
 
 def read_movies(src):
@@ -28,6 +39,7 @@ def is_duplicate(title, movies):
     return False
 
 
+@profile
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = read_movies(src)
@@ -41,7 +53,12 @@ def find_duplicate_movies(src):
 
 def timeit_helper():
     """Part A:  Obtain some profiling measurements using timeit"""
-    # YOUR CODE GOES HERE
+    t = timeit.Timer(stmt='find_duplicate_movies("movies.txt")',
+                     setup='from __main__ import find_duplicate_movies')
+    runs_per_call = 3
+    repeats = 7
+    result = t.repeat(repeat=repeats, number=runs_per_call)
+    print min(result) / float(runs_per_call)
 
 
 def main():
