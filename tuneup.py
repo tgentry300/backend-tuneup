@@ -9,6 +9,7 @@ import pstats
 import timeit
 # import defaultdict
 
+
 def profile(func):
     """A function that can be used as a decorator to measure performance"""
 
