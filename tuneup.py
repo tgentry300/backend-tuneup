@@ -7,7 +7,7 @@ __author__ = "???"
 import cProfile
 import pstats
 import timeit
-
+# import defaultdict
 
 def profile(func):
     """A function that can be used as a decorator to measure performance"""
@@ -34,7 +34,7 @@ def read_movies(src):
 def is_duplicate(title, movies):
     """Case insensitive search within a list"""
     for movie in movies:
-        if movie.lower() == title.lower():
+        if movie == title:
             return True
     return False
 
@@ -43,11 +43,13 @@ def is_duplicate(title, movies):
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list"""
     movies = read_movies(src)
+    movies_dict = {}
     duplicates = []
-    while movies:
-        movie = movies.pop()
-        if is_duplicate(movie, movies):
-            duplicates.append(movie)
+    for movie in movies:
+            if movie not in movies_dict:
+                movies_dict[movie] = movie
+            else:
+                duplicates.append(movie)
     return duplicates
 
 
